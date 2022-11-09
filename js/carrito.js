@@ -15,7 +15,21 @@ class Carrito{
 	borraArticulo(codigo){		
 	}
 	
-	modificaUnidades(codigo,n){		
+	modificaUnidades(codigo,n){
+		let articulo=listaArticulos.find(a => codigo==a.codigo);;
+		switch (n) {
+			case "+":
+				articulo.unidades+=1;
+				break;
+		
+			case "-":
+				articulo.unidades-=1;
+				break;
+			case "x":
+				borraArticulo(articulo.codigo);
+				break;
+		}	
+		verCarrito();	
 	}	
 			
 	verCarrito(){
