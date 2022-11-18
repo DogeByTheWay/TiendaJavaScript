@@ -1,5 +1,4 @@
 	criterios=["Sin ordenar","Ascendente por precio", "Descendente por precio"]
-	let carro=null;
 	function creaListaCriterios(){
 		let selector=document.getElementById("criteriosOrdenacion");
 		criterios.forEach(c => {
@@ -38,18 +37,23 @@
 						<p class="card-text text-center">${articulo.precio}</p>
 					</b>
 				</div>
-				<button onclick="ponArticuloEnCarrito(this.id);" id="${articulo.codigo}" class="btn-success">comprar</button>
+				<button id="${articulo.codigo}" class="btn-success compra">comprar</button>
 			</div>
 		</div>`;
 		});
-		
+		let botones=document.getElementsByClassName("compra");
+		Array.from(botones).forEach(e=>{
+			e.addEventListener("click",()=>ponArticuloEnCarrito(e.id)
+		)})
 	}
+
 	
 	function reset(){
 		document.getElementById("contenedor").innerHTML="";
 	}
 	
 	function ponArticuloEnCarrito(id){
+		
 		let articulo=listaArticulos.find(a => id==a.codigo);
 		carro.anyadeArticulo(articulo);
 	}
@@ -67,15 +71,21 @@
 	}
 
 	function efectuaPedido(){
-	
+		unShowCarro();
+		alert("Pedido realizado")
+		let item=JSON.stringify(carro.productos)
+		carro.productos=[];
+		console.log(item);
 	}
 
 	window.onload=()=>{
-		let numRandom=Math.random() * 7000;
-		carro=new Carrito(Math.trunc(numRandom))
+		let numRandom=Math.trunc(Math.random() * 7000);
+		carro=new Carrito(numRandom)
 		creaListaCriterios();
 		pintaArticulos();
+		document.getElementById("idPedido").innerHTML="#"+numRandom;
 		document.getElementById("imagencarrito").onclick=verCarro;
+		document.getElementById("btnEfectuaPedido").onclick=efectuaPedido;
 		document.getElementById("close").onclick=unShowCarro;
 		document.getElementById("btnCierraDialog").onclick=unShowCarro;
 	}

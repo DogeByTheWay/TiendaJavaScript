@@ -8,25 +8,25 @@ class Carrito{
 		if(this.productos.includes(articulo)){
 			articulo.unidades+=1;
 		}else{
-			this.productos.push(articulo);	
+			articulo.unidades=1;
+			this.productos.push(articulo);
 		}
 	}			
 				
 	borraArticulo(codigo){		
-		let articulo=listaArticulos.find(a => codigo.id==a.codigo);
+		let articulo=this.productos.find(a => codigo.id==a.codigo);
 		this.productos.splice(articulo,1);
 		carro.verCarrito();
 	}
 	
 	modificaUnidades(codigo,n){
-		let articulo=listaArticulos.find(a => codigo.id==a.codigo);
+		let articulo=this.productos.find(a => codigo==a.codigo);
 		if(articulo.unidades==1 && n=="-"){
 			carro.borraArticulo(articulo.codigo);
 			return;
 		}
 		switch (n) {
 			case "+":
-				console.log(articulo)
 				articulo.unidades+=1;
 				break;
 		
@@ -54,14 +54,18 @@ class Carrito{
 			resultado+=`<tr><td><img src='../assets/${producto.codigo}.jpg' style="width:30px; 
 			height:30px;"></td><td>${producto.nombre}</td><td>${producto.descripcion}</td>
 			<td>${producto.unidades}</td><td>${producto.precio}€</td><td>
-			<button onclick="carro.modificaUnidades(${producto.codigo},'+');" style="margin-right:10px;" class='btn btn-primary'>+</button>
-			<button onclick="carro.modificaUnidades(${producto.codigo},'-');" style="margin-right:10px;" class='btn btn-warning'>-</button>
-			<button onclick="carro.modificaUnidades(${producto.codigo},'x');" style="margin-right:10px;" class='btn btn-danger'>BORRAR</button></td></tr>`
+			<button id="${producto.codigo}" value="+" style="margin-right:10px;" class='btn btn-primary modifier'>+</button>
+			<button id="${producto.codigo}" value="-" style="margin-right:10px;" class='btn btn-warning modifier'>-</button>
+			<button id="${producto.codigo}" value="x" style="margin-right:10px;" class='btn btn-danger modifier'>BORRAR</button></td></tr>`
 			total+=producto.precio * producto.unidades;
 		});
 		resultado+="</table>"
 	}
 		document.getElementById("dialogContent").innerHTML=resultado;
+		let arrayBotones=document.getElementsByClassName("modifier");
+		Array.from(arrayBotones).forEach(e=>{
+			e.addEventListener("click",()=>this.modificaUnidades(e.id,e.value))
+		})
 		document.getElementById("total").innerHTML=total+"€";
 
 	}			
